@@ -82,6 +82,7 @@ function chooseHole(holes) {
   // gets a hole at index of random number
   const index = randNum(0, 8);
   const hole = holes[index];
+  // if hole index matches previous hole, choose different hole.
   if (hole === lastHole) {
     return chooseHole(holes);
   }
@@ -165,6 +166,7 @@ function toggleVisibility(hole) {
 TODO:
 [X]make moles disappear after the game has ended
 */
+
 // for each item in the holes nodelist, remove the 'show' class to hide all moles when game has ended, will be called by gameStopped()
 function hideAll(holes) {
   holes.forEach(function (hole, index) {
@@ -184,6 +186,7 @@ function hideAll(holes) {
  *
  */
 function updateScore() {
+  // added '+1' so in-game timer display matches duration of game
   points += 1;
   score.textContent = points;
   return points;
@@ -241,11 +244,11 @@ function whack(event) {
   return points;
 }
 
+
+  // gets id from mole that is clicked, removes text from id so only number remains. Use number to remove 'show' class from holes at a given index
 function hideClickedMole(event) {
-  // gets id from mole that is clicked, removes text from id so only number remains. Use number to remove show class from holes at a given index
-  let moleClicked = event.target.id.slice(4);
-  console.log('moleClikced:',moleClicked);
-  holes[moleClicked].classList.remove("show");
+  let moleClicked = event.target.id.slice(4); //ex: mole1 -> 1
+  holes[moleClicked].classList.remove("show"); //holes[1].classList...
 
 }
 
@@ -276,7 +279,7 @@ function setDuration(duration) {
   return time;
 }
 
-/* uses difficulty level to modify the length of the game. */
+/* uses difficulty of level to modify the length of the game. */
 function getDuration(difficulty) {
   let gameLength = 0;
   if(difficulty === "easy"){
@@ -296,8 +299,8 @@ function getDuration(difficulty) {
  * timer using clearInterval. Returns "game stopped".
  *
  */
+// also called hideAll() to make all moles disappear after the game ends
 function stopGame() {
-  // stopAudio(song);  //optional
   clearInterval(timer);
   hideAll(holes);
   return "game stopped";
@@ -310,14 +313,21 @@ function stopGame() {
  *
  */
 function startGame() {
-  // showUp();
+  // gets the difficulty the player has selected
   diffSelected = getDifficulty();
+  // sets global difficulty to difficulty level selected
   difficulty = diffSelected;
+  // clears score from last game, if first game, does nothing
   clearScore();
+  // sets event listners for all moles
   setEventListeners();
+  // sets global duration to length of time defined by difficulty the player has chosen
   duration = getDuration(difficulty);
+  // calls setDuation with global duration as parameter
   setDuration(duration);
+  // starts timer for the game
   startTimer();
+  // checks to when condition is met to end game.
   gameOver();
   return "game started";
 }
