@@ -149,7 +149,7 @@ let counter2 = 0;
 function showAndHide(hole, delay) {
   let timeoutID = setTimeout(() => {
     console.log('hole:',hole)
-    hidePreviousHole(previousHole);
+    hidePreviousHole(previousHole); 
     toggleVisibility(hole);
     if(counter != 0){
       previousHole = hole;
