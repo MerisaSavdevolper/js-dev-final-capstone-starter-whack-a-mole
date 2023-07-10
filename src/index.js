@@ -11,7 +11,6 @@ let lastHole = 0;
 let points = 0;
 let difficulty = "";
 let duration = 0;
-let hole = '';
 let previousHole = '';
 /**
  * Generates a random integer within a range.
@@ -142,15 +141,18 @@ function showUp() {
  * a delay time and the hole where the mole is hidden. The function calls
  * `toggleVisibility` to show or hide the mole. The function should return
  * the timeoutID
+ * this function also calls the hidePreviousHole() function to hide the previous mole after a new mole is shown
  *
  */ 
-let counter2 = 0;
-
 function showAndHide(hole, delay) {
   let timeoutID = setTimeout(() => {
-    console.log('hole:',hole)
+    // console.log('hole:',hole)
     hidePreviousHole(previousHole); 
     toggleVisibility(hole);
+
+    /**
+     * used to ensure previousHole and hole are out of phase by 'one hole'
+    */
     if(counter != 0){
       previousHole = hole;
     }
@@ -159,15 +161,21 @@ function showAndHide(hole, delay) {
   return timeoutID;
 }
 
+/* 
+  used to store a counter value that is used to keep previousHole and hole out of phase.
+*/
 let counter = 0;
 
+/* 
+  removes the 'show' class from a hole after a new hole is shown
+*/
 function hidePreviousHole(previousHole){
  if(counter > 0 && previousHole !=''){
   removeHole(previousHole);
-  console.log('previousHole:',previousHole);
+  // console.log('previousHole:',previousHole);
  }
  counter ++;
- console.log(counter);
+//  console.log(counter);
 }
 
 /**
@@ -181,6 +189,9 @@ function toggleVisibility(hole) {
   return hole;
 }
 
+/**
+ * removes the 'show' class from a given hole
+*/
 function removeHole(hole){
   hole.classList.remove("show");
   return hole;
@@ -191,7 +202,10 @@ TODO:
 [X]make moles disappear after the game has ended
 */
 
-// for each item in the holes nodelist, remove the 'show' class to hide all moles when game has ended, will be called by gameStopped()
+/** 
+ * for each item in the holes nodelist, remove the 'show' class to hide 
+ * all moles when game has ended, will be called by gameStopped()
+*/
 function hideAll(holes) {
   holes.forEach(function (hole, index) {
     holes[index].classList.remove("show");
@@ -259,9 +273,9 @@ function startTimer() {
  * clicks on a mole. The setEventListeners should use this event
  * handler (e.g. mole.addEventListener('click', whack)) for each of
  * the moles.
- *
+ * 
+ *each time a mole is clicked the updateScore() and hideClickedMole() are called
  */
-// each time a mole is clicked the updateScore() and hideClickedMole() are called
 function whack(event) {
   updateScore();
   hideClickedMole(event);
@@ -269,19 +283,33 @@ function whack(event) {
 }
 
 
-  // gets id from mole that is clicked, removes text from id so only number remains. Use number to remove 'show' class from holes at a given index
+ 
+  /**
+   * 
+   * gets id from mole that is clicked, removes text from id so only 
+   * number remains. Use number to remove 'show' class from holes 
+   * at a given index
+   * 
+   */
 function hideClickedMole(event) {
   let moleClicked = event.target.id.slice(4); //ex: mole1 -> 1
   holes[moleClicked].classList.remove("show"); //holes[1].classList...
 
+
 }
 
-// gets the difficulty from the difficulty drop down
+
+/**
+ * 
+ * gets the difficulty from the difficulty drop down
+ * 
+ */
 function getDifficulty() {
   // uses querySelector to get value from difficulty drop down
   const diff = document.querySelector("#diff-select");
   return diff.value;
 }
+
 /**
  *
  * Adds the 'click' event listeners to the moles. See the instructions
@@ -303,7 +331,11 @@ function setDuration(duration) {
   return time;
 }
 
-/* uses difficulty of level to modify the length of the game. */
+/**
+ * 
+ * uses difficulty of level to modify the length of the game. 
+ * 
+ * */
 function getDuration(difficulty) {
   let gameLength = 0;
   if(difficulty === "easy"){
@@ -322,8 +354,9 @@ function getDuration(difficulty) {
  * This function is called when the game is stopped. It clears the
  * timer using clearInterval. Returns "game stopped".
  *
+ * also calls hideAll() to make all moles disappear after the game ends
+ * 
  */
-// also called hideAll() to make all moles disappear after the game ends
 function stopGame() {
   clearInterval(timer);
   hideAll(holes);

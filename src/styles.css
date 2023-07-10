@@ -25,11 +25,10 @@ h2 {
   -webkit-text-stroke: 1px black;
   margin: 0;
 }
-
 #start {
     text-align: center;
     font-size: 25px;
-    margin: 10px;
+    margin: 0px;
     background-color: rgb(141, 175, 237);
     border-radius: 15px;
 }
@@ -37,13 +36,16 @@ h2 {
 #timer{
     color: white;
 }
+#title{
+  margin-bottom: 0px;
+}
 
 .grid {
   width: 600px;
-  height: 350px;
+  height: 300px;
   display: flex;
   flex-wrap: wrap;
-  margin: 0 auto;
+  margin: 0 auto 50;
   cursor: url('../assets/mallet.png'), auto;
 }
 
