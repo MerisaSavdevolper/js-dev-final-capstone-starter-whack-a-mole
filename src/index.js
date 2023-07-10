@@ -11,7 +11,8 @@ let lastHole = 0;
 let points = 0;
 let difficulty = "";
 let duration = 0;
-
+let hole = '';
+let previousHole = '';
 /**
  * Generates a random integer within a range.
  *
@@ -52,7 +53,7 @@ function setDelay(difficulty) {
       const randNum = Math.floor(Math.random() * (1200 - 600 + 1)) + 600;
       timeDelay = randNum;
     } else {
-      timeDelay = 10;
+      timeDelay = 200;
     }
   } catch (error) {
     console.log("error: difficulty not set",error);
@@ -131,7 +132,7 @@ function gameOver() {
  */
 function showUp() {
   let delay = setDelay(difficulty);
-  const hole = chooseHole(holes);
+   const hole = chooseHole(holes);
   return showAndHide(hole, delay);
 }
 
@@ -142,13 +143,31 @@ function showUp() {
  * `toggleVisibility` to show or hide the mole. The function should return
  * the timeoutID
  *
- */
+ */ 
+let counter2 = 0;
+
 function showAndHide(hole, delay) {
-  const timeoutID = setTimeout(() => {
+  let timeoutID = setTimeout(() => {
+    console.log('hole:',hole)
+    hidePreviousHole(previousHole);
     toggleVisibility(hole);
+    if(counter != 0){
+      previousHole = hole;
+    }
     gameOver();
   }, delay);
   return timeoutID;
+}
+
+let counter = 0;
+
+function hidePreviousHole(previousHole){
+ if(counter > 0 && previousHole !=''){
+  removeHole(previousHole);
+  console.log('previousHole:',previousHole);
+ }
+ counter ++;
+ console.log(counter);
 }
 
 /**
@@ -158,7 +177,12 @@ function showAndHide(hole, delay) {
  *
  */
 function toggleVisibility(hole) {
-  hole.classList.toggle("show");
+      hole.classList.toggle("show");
+  return hole;
+}
+
+function removeHole(hole){
+  hole.classList.remove("show");
   return hole;
 }
 
